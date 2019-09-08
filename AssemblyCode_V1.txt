@@ -1,7 +1,7 @@
     .txt
     .globl __start
 __start :
-        mov r1 ,1         // this is the number that we want to check as Ramanunjan Number
+        mov r1 ,0        // this is the number that we want to check as Ramanunjan Number
         mov r0, 0         // this is count variable to check whether number is Ramanunjan or not
         
         /*
@@ -9,10 +9,73 @@ __start :
         */
         
         
-.loop1 : 
-       /*
-       This loop initializes the component numbers
-       */ 
-       mov r2 ,1          //initialize first component number as 1
-       mov r0 , 0         //the count varibale is initialized to zero
+.loopRamaNum :             
+                           //loop for Ramanunjan Number
+                           /*
+                           This loop initializes the component numbers
+                           */ 
+       add r1, r1 ,1       //the number is increased by one
+       mov r2 , 0          //initialize first component number as 0
+       mov r0 , 0          //the count varibale is initialized to zero
        
+       
+.loopComp1 :               
+                           //loop for component 1
+      
+       add r2,r2,1         // increment r2 ie (comp1) by 1
+       mul r4,r2,r2        // r4 = r2*r2
+       mul r4,r4,r2        // r4 = r2*r2*r2  //comp 1 cube ie r4 stores cube of r2 (comp1)
+       
+       cmp r4 ,r1          //comapring comp1 and the number 
+       bgt .endlpcmp1      //the current number is not success check the next one
+       
+       
+       add r3,r2,1         // the comp 2 is given intial value (comp1 + 1)
+       
+
+.loopComp2 : 
+       
+       mul r5 ,r3 ,r3                   // r5  is square of cmp2  //cmp == component ==comp 
+       mul r5 ,r5 ,r3                   // r5  is cube   of cmp2
+       
+       cmp r5 , r1                      // check condition
+       bgt .endlpcmp2                   //this pair is not feasible next pair
+       
+       add r5,r5,r4                     // now r5 is have the sum of cubes of cmp1 and cmp 2
+       cmp r5 ,r1                       //compare with the expected Ramanunjan Number
+       beq .increaseCount               // if both are equal we have to increase the count
+                                        //incase both are not equal we need to increase cmp2
+       add r3, r3, 1
+       b   .loopComp2                   //jump to loop of the comp2
+      
+       
+.endlpcmp2 :
+                                        //there  is no solution for given cmp 1 and other values of cmp2 
+                                        //we will find for other comp1 values by jumping to its loop
+       b  .loopComp1                                 
+
+
+.endlpcmp1 : 
+                                        // if programm enters here it means the current number is not the
+                                        //the Ramanunjan Number we nee dto update the r1 and proceed further
+        b .loopRamaNum
+
+
+
+
+.increaseCount :
+        add r0,r0,1                     //the count has been increased
+                                        //we will check if count is 2
+        cmp r0, 2
+        beq .endlProgram                 //go to end of loop for cmp 1
+                                        //else we have 
+                                        // now we need to increase the cmp2 value so that we can
+                                        // continue checking further
+       add r3, r3 ,1
+       b   .loopComp2                   //jump to loop of cmpnent 2
+        
+.endProgram :
+                                        //the value stored in r1 is currently the first Ramanunjan NUmber
+       ret r1                           //to get value back 
+       exit 0                           //to exit the programm without error
+
