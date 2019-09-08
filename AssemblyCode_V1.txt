@@ -1,0 +1,18 @@
+    .txt
+    .globl __start
+__start :
+        mov r1 ,1         // this is the number that we want to check as Ramanunjan Number
+        mov r0, 0         // this is count variable to check whether number is Ramanunjan or not
+        
+        /*
+        the CPU registers r2 and r3 are reserved for the two component numbers of the Ramanunjan Number
+        */
+        
+        
+.loop1 : 
+       /*
+       This loop initializes the component numbers
+       */ 
+       mov r2 ,1          //initialize first component number as 1
+       mov r0 , 0         //the count varibale is initialized to zero
+       
