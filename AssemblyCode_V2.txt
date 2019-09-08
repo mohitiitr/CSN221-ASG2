@@ -1,0 +1,67 @@
+                    .txt
+                    .globl __start
+                    
+                    /*
+                            r0 count variable (count)
+                            r1 the expected Ramanunjan Number (RN)
+                            r2 component 1 (cmp1)
+                            r3 component 2 (cmp2)
+                            r4 cube of cmp1 (ccmp1)
+                            r5 cube of cmp2 (ccmp2)
+                    */
+                    
+__start :
+                    mov r1 ,0        
+        
+.loopRamaNum :             
+
+                    add r1, r1 ,1       // RN++
+                    mov r2 , 0          // cmp1 =0
+                    mov r0 , 0          // count =0
+
+       
+.loopComp1 :               
+                           
+      
+                    add r2,r2,1         // cmp1++
+                    mul r4,r2,r2        // ccmp1 = cmp1^2
+                    mul r4,r4,r2        // ccmp1 = cmp1^3
+
+                    cmp r4 ,r1          //if (ccmp1 > RN) 
+                    bgt .loopRamaNum    //go to loopRamaNum
+                    
+                    add r3,r2,1         //cmp2 = cmp1+1
+
+
+.loopComp2 : 
+       
+                     mul r5 ,r3 ,r3                   // ccmp2 = cmp2^2
+                     mul r5 ,r5 ,r3                   // ccmp2 = cmp2^3
+
+                     cmp r5 , r1                      // if (ccmp2 > RN)
+                     bgt .loopComp1                   //this pair is not feasible next pair
+
+                     add r5,r5,r4                     // ccmp2 = ccmp2 + ccmp1
+                     cmp r5 ,r1                       // compare with the expected Ramanunjan Number
+                     beq .increaseCount               // RN is = to ccmp2 hence evaluate further
+                    
+                     add r3, r3, 1                    // cmp2++
+                     b   .loopComp2                   //jump to loop of the comp2
+
+
+
+.increaseCount :
+                    add r0,r0,1                     //count++
+                                                    //we will check if count is 2
+                    cmp r0, 2
+                    beq .endlProgram                /*
+                                                      count was 2 print RN
+                                                    */                                             
+                    add r3, r3 ,1                    // cmp2++
+                    b   .loopComp2                   //jump to loop of cmpnent 2
+        
+        
+        
+.endProgram :
+                                                     //the value stored in r1 is currently the first Ramanunjan NUmber
+                    ret r1                           //to get value back     
